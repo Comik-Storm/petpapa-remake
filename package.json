@@ -1,0 +1,25 @@
+{
+  "name": "petpapa-remake",
+  "version": "1.0.0",
+  "main": "node_modules/expo/AppEntry.js",
+  "scripts": {
+    "start": "expo start",
+    "android": "expo start --android",
+    "ios": "expo start --ios",
+    "web": "expo start --web"
+  },
+  "dependencies": {
+    "@fortawesome/react-native-fontawesome": "^0.3.0",
+    "expo": "~46.0.7",
+    "expo-status-bar": "~1.4.0",
+    "react": "18.0.0",
+    "react-native": "0.69.4",
+    "react-native-app-intro-slider": "^4.0.4",
+    "react-native-paper": "^5.0.0-rc.4",
+    "expo-font": "~10.2.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.12.9"
+  },
+  "private": true
+}
