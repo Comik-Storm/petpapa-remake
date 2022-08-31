@@ -1,19 +1,25 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 
-import {Text, View, StyleSheet, ActivityIndicator} from 'react-native';
+import {Text, View, StyleSheet, ActivityIndicator, TouchableOpacity, CameraRoll} from 'react-native';
 import SafeView from "../components/SafeView";
-import {Button, Avatar, Dialog, ListItem} from "@rneui/base";
+import {Button, Avatar, Dialog, ListItem, Icon} from "@rneui/base";
 import * as DocPic from 'expo-document-picker'
 import {PermissionsAndroid} from 'react-native';
 import styles from "../config/styles";
-import { Camera, CameraType } from 'expo-camera';
+import {Camera, CameraType} from 'expo-camera';
 import SignUpForm from "../components/SignUpForm";
-import CameraComponent from "../components/CameraComponent";
 
 const SignUp = ({navigation}) => {
     const [avatar, setAvatar] = useState('');
     const [visible, setVisible] = useState(false);
-    const [showCam, setShowCam] = useState(false);
+    const [type, setType] = useState(CameraType.front);
+    const [openCam, setOpenCam] = useState(false)
+    const [permission, requestPermission] = Camera.useCameraPermissions();
+    const camRef = useRef(null)
+
+    const toggleCameraType = () => {
+        setType(type === CameraType.front ? CameraType.back : CameraType.front)
+    }
 
     const toggleDialog = () => {
         setVisible(!visible)
@@ -23,9 +29,69 @@ const SignUp = ({navigation}) => {
         setVisible(true)
     }
 
-    if (showCam) {
-        console.log("in")
-        return <CameraComponent handler={setShowCam}/>
+    if (!permission) {
+        // Camera permissions are still loading
+        return <View/>;
+    }
+
+    if (openCam) {
+        return (
+            <Dialog
+                isVisible={openCam}
+            >
+                <Camera
+                    type={type}
+                    useCamera2Api={true}
+                    ref={camRef}
+                    style={{height: '75%'}}
+                />
+                    <ListItem.Content
+                        style={{
+                            justifyContent: 'space-evenly',
+                            alignItems: 'center',
+                            flexDirection: 'row'
+                        }}
+                    >
+                        <Icon
+                            name='ban'
+                            type='font-awesome-5'
+                            color='whitesmoke'
+                            size={24}
+                            onPress={() => {
+                                setOpenCam(false)
+                            }}
+                        />
+                        <Icon
+                            name='circle'
+                            type='font-awesome-5'
+                            color='whitesmoke'
+                            reverse
+                            onPress={() => {
+                                if (camRef) {
+                                    const picture = camRef.current.takePictureAsync({
+                                        onPictureSaved: camRef.current.onPictureSaved
+                                    }).then((picture) => {
+                                        setAvatar(picture.uri)
+                                        setOpenCam(false)
+                                        setVisible(false)
+                                    }).catch(err => {
+                                        console.log(err)
+                                    })
+                                }
+                            }}
+                        />
+                        <Icon
+                            name='sync-alt'
+                            type='font-awesome-5'
+                            color='whitesmoke'
+                            size={24}
+                            onPress={() => {
+                                toggleCameraType()
+                            }}
+                        />
+                    </ListItem.Content>
+            </Dialog>
+        )
     }
 
     return (
@@ -56,9 +122,9 @@ const SignUp = ({navigation}) => {
                     }}/>
                 </Avatar>}
             </View>
-            <SignUpForm navigation={navigation} />
+            <SignUpForm navigation={navigation}/>
             <>
-            {/*TODO: Remove JSX Fragment From Here During Production*/}
+                {/*TODO: Remove JSX Fragment From Here During Production*/}
                 <Dialog
                     isVisible={visible}
                     onBackdropPress={toggleDialog}
@@ -80,7 +146,7 @@ const SignUp = ({navigation}) => {
                             marginBottom: 10
                         }}
                         onPress={() => {
-                            setShowCam(true)
+                            setOpenCam(true)
                         }}>
                         <Avatar
                             icon={{
@@ -188,5 +254,28 @@ export default SignUp;
 const localStyles = StyleSheet.create({
     logo: {
         alignItems: 'center'
+    },
+    container: {
+        flex: 1,
+        justifyContent: 'center',
+    },
+    camera: {
+        flex: 1,
+    },
+    buttonContainer: {
+        flex: 1,
+        flexDirection: 'row',
+        backgroundColor: 'transparent',
+        margin: 64,
+    },
+    button: {
+        flex: 1,
+        alignSelf: 'flex-end',
+        alignItems: 'center',
+    },
+    text: {
+        fontSize: 24,
+        fontWeight: 'bold',
+        color: 'white',
     },
 })
