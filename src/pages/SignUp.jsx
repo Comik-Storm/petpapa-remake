@@ -1,16 +1,19 @@
 import React, {useEffect, useState} from 'react';
 
-import {Text, View, StyleSheet} from 'react-native';
+import {Text, View, StyleSheet, ActivityIndicator} from 'react-native';
 import SafeView from "../components/SafeView";
 import {Button, Avatar, Dialog, ListItem} from "@rneui/base";
 import * as DocPic from 'expo-document-picker'
 import {PermissionsAndroid} from 'react-native';
 import styles from "../config/styles";
+import { Camera, CameraType } from 'expo-camera';
 import SignUpForm from "../components/SignUpForm";
+import CameraComponent from "../components/CameraComponent";
 
 const SignUp = ({navigation}) => {
     const [avatar, setAvatar] = useState('');
     const [visible, setVisible] = useState(false);
+    const [showCam, setShowCam] = useState(false);
 
     const toggleDialog = () => {
         setVisible(!visible)
@@ -18,6 +21,11 @@ const SignUp = ({navigation}) => {
 
     const pickImage = () => {
         setVisible(true)
+    }
+
+    if (showCam) {
+        console.log("in")
+        return <CameraComponent handler={setShowCam}/>
     }
 
     return (
@@ -72,9 +80,7 @@ const SignUp = ({navigation}) => {
                             marginBottom: 10
                         }}
                         onPress={() => {
-                            PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE).then(() => {
-                                toggleDialog()
-                            })
+                            setShowCam(true)
                         }}>
                         <Avatar
                             icon={{
