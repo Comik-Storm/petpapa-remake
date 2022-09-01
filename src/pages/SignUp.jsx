@@ -31,7 +31,11 @@ const SignUp = ({navigation}) => {
 
     if (!permission) {
         // Camera permissions are still loading
-        return <View/>;
+        return (
+            <SafeView>
+                <ActivityIndicator size='small' animating={true}/>
+            </SafeView>
+        );
     }
 
     if (openCam) {
@@ -146,7 +150,12 @@ const SignUp = ({navigation}) => {
                             marginBottom: 10
                         }}
                         onPress={() => {
-                            setOpenCam(true)
+                            requestPermission().
+                            then(() => {
+                                setOpenCam(true)
+                            }).catch(err => {
+                                console.log(err)
+                            })
                         }}>
                         <Avatar
                             icon={{
