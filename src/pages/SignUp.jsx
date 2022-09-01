@@ -150,12 +150,17 @@ const SignUp = ({navigation}) => {
                             marginBottom: 10
                         }}
                         onPress={() => {
-                            requestPermission().
-                            then(() => {
+                            if (!permission.granted) {
+                                requestPermission().
+                                then(() => {
+                                    setOpenCam(true)
+                                }).catch(err => {
+                                    console.log(err)
+                                })
+                            }
+                            else {
                                 setOpenCam(true)
-                            }).catch(err => {
-                                console.log(err)
-                            })
+                            }
                         }}>
                         <Avatar
                             icon={{
