@@ -1,18 +1,15 @@
 import React, {useState} from 'react';
 
-import {Text, View} from 'react-native';
+import {StyleSheet, Text, View} from 'react-native';
 import {ErrorMessage, Formik} from "formik";
 import {Avatar, Button, color, Dialog, Input, Tooltip} from "@rneui/base";
 import * as YUP from 'yup'
+import styles from "../config/styles";
 
 const SignUpForm = ({navigation}) => {
     const [pwdIcon, setPwdIcon] = useState('eye-slash')
     const [pwdConfIcon, setPwdConfIcon] = useState('eye-slash')
-    const [done, setDone] = useState(false);
-
-    const toggleConfirmation = () => {
-        setDone(!done)
-    }
+    const [loading, setLoading] = useState(false);
 
     return (
         //TODO: Add Other Fields As Required
@@ -31,6 +28,11 @@ const SignUpForm = ({navigation}) => {
             })}
             onSubmit={values => {
                 console.log(JSON.stringify(values))
+                setLoading(true);
+                setTimeout(() => {
+                    setLoading(false)
+                    navigation.navigate('Home')
+                }, 3000)
             }}
         >
             {({handleChange, handleBlur, handleSubmit, values, errors, touched}) => (
@@ -51,7 +53,7 @@ const SignUpForm = ({navigation}) => {
                     {
                         errors.name && touched.name ? <Tooltip>
                             <Text style={{color: 'red'}}>
-                                <ErrorMessage name='name' />
+                                <ErrorMessage name='name'/>
                             </Text>
                         </Tooltip> : null
                     }
@@ -71,7 +73,7 @@ const SignUpForm = ({navigation}) => {
                     {
                         errors.email && touched.email ? <Tooltip>
                             <Text style={{color: 'red'}}>
-                                <ErrorMessage name='email' />
+                                <ErrorMessage name='email'/>
                             </Text>
                         </Tooltip> : null
                     }
@@ -92,14 +94,14 @@ const SignUpForm = ({navigation}) => {
                             type: 'font-awesome-5',
                             onPress: () => {
                                 setPwdIcon(pwdIcon === 'eye' ? 'eye-slash' : 'eye')
-                        }
+                            }
                         }}
                         secureTextEntry={pwdIcon !== 'eye'}
                     />
                     {
                         errors.password && touched.password ? <Tooltip>
                             <Text style={{color: 'red'}}>
-                                <ErrorMessage name='password' />
+                                <ErrorMessage name='password'/>
                             </Text>
                         </Tooltip> : null
                     }
@@ -127,17 +129,35 @@ const SignUpForm = ({navigation}) => {
                     {
                         errors.conf_password && touched.conf_password ? <Tooltip>
                             <Text style={{color: 'red'}}>
-                                <ErrorMessage name='conf_password' />
+                                <ErrorMessage name='conf_password'/>
                             </Text>
                         </Tooltip> : null
                     }
-                    <Button onPress={handleSubmit} containerStyle={{marginTop: 10}}>
-                        Submit
-                    </Button>
-                    <Button onPress={() => {navigation.navigate('SignIn')}} containerStyle={{marginTop: 5}}>
-                        Cancel
-                    </Button>
-                {/*  TODO: Add Confirmation Dialog From RNE  */}
+                    <View style={localStyles.btnGrp}>
+                        <Button
+                            onPress={handleSubmit}
+                            disabled={loading}
+                            titleStyle={{
+                                paddingHorizontal: 25,
+                                ...styles.actionText
+                            }}
+                        >
+                            Submit
+                        </Button>
+                        <Button
+                            onPress={() => {
+                                navigation.navigate('SignIn')
+                            }}
+                            disabled={loading}
+                            titleStyle={{
+                                paddingHorizontal: 25,
+                                ...styles.actionText
+                            }}
+                        >
+                            Cancel
+                        </Button>
+                    </View>
+                    {/*  TODO: Add Confirmation Dialog From RNE  */}
                 </View>
             )}
         </Formik>
@@ -145,3 +165,12 @@ const SignUpForm = ({navigation}) => {
 };
 
 export default SignUpForm;
+
+const localStyles = StyleSheet.create({
+    btnGrp: {
+        alignItems: 'center',
+        flexDirection: 'row-reverse',
+        justifyContent: 'space-evenly',
+        marginTop: 55
+    }
+})

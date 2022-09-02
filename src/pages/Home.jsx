@@ -1,12 +1,13 @@
 import React from 'react';
 
 import {Text, View} from 'react-native';
+import SafeView from "../components/SafeView";
 
 const Home = () => {
     return (
-        <View>
+        <SafeView>
             <Text>Hi!</Text>
-        </View>
+        </SafeView>
     );
 };
 
