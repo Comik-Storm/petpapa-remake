@@ -202,7 +202,6 @@ const SignUp = ({navigation}) => {
                                     type: 'image/*',
                                     copyToCacheDirectory: true
                                 }).then((response) => {
-                                    console.log(response)
                                     setAvatar(response.uri)
                                 }).catch(err => {
                                     console.log(err)
