@@ -273,8 +273,6 @@ export default SignUp;
 const localStyles = StyleSheet.create({
     logo: {
         alignItems: 'center',
-        marginTop: -50,
-        marginBottom: -50
     },
     container: {
         flex: 1,

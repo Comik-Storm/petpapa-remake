@@ -171,6 +171,5 @@ const localStyles = StyleSheet.create({
         alignItems: 'center',
         flexDirection: 'row-reverse',
         justifyContent: 'space-evenly',
-        marginTop: 55
     }
 })
