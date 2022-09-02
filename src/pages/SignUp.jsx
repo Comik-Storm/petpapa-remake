@@ -8,14 +8,17 @@ import {PermissionsAndroid} from 'react-native';
 import styles from "../config/styles";
 import {Camera, CameraType} from 'expo-camera';
 import SignUpForm from "../components/SignUpForm";
+import {useIsFocused} from "@react-navigation/native";
 
 const SignUp = ({navigation}) => {
     const [avatar, setAvatar] = useState('');
     const [visible, setVisible] = useState(false);
     const [type, setType] = useState(CameraType.front);
     const [openCam, setOpenCam] = useState(false)
+    const [ready, setReady] = useState(false)
     const [permission, requestPermission] = Camera.useCameraPermissions();
     const camRef = useRef(null)
+    const isFocused = useIsFocused()
 
     const toggleCameraType = () => {
         setType(type === CameraType.front ? CameraType.back : CameraType.front)
@@ -38,16 +41,19 @@ const SignUp = ({navigation}) => {
         );
     }
 
-    if (openCam) {
+    if (openCam && isFocused) {
         return (
             <Dialog
                 isVisible={openCam}
             >
                 <Camera
                     type={type}
-                    useCamera2Api={true}
+                    // useCamera2Api={true} TODO: Report Bug in Camera2Api
                     ref={camRef}
                     style={{height: '75%'}}
+                    onCameraReady={() => {
+                        setReady(true)
+                    }}
                 />
                     <ListItem.Content
                         style={{
@@ -71,7 +77,7 @@ const SignUp = ({navigation}) => {
                             color='whitesmoke'
                             reverse
                             onPress={() => {
-                                if (camRef) {
+                                if (camRef && ready) {
                                     const picture = camRef.current.takePictureAsync({
                                         onPictureSaved: camRef.current.onPictureSaved
                                     }).then((picture) => {
