@@ -19,7 +19,7 @@ const SignIn = ({navigation}) => {
             justifyContent: 'space-evenly'
         }}>
             <View style={localStyles.logo}>
-                <Avatar size={128} source={assets[0]} />
+                <Avatar size={170} source={assets[0]} />
             </View>
             <View style={localStyles.btnGroup}>
                 <Button
@@ -79,7 +79,7 @@ const SignIn = ({navigation}) => {
                         color: '#000000',
                     }}
                     icon={{
-                        name: 'facebook',
+                        name: 'envelope',
                         type: 'font-awesome-5'
                     }}
                     onPress={() => navigation.navigate('SignUp')}

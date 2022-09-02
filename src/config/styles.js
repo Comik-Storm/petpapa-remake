@@ -18,5 +18,6 @@ export default StyleSheet.create({
     },
     actionText: {
         fontFamily: 'Barlow',
+        fontSize: 18
     }
 })
